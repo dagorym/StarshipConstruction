@@ -117,7 +117,7 @@ if __name__ == '__main__':
                     for ship in finishedShips:
                         for type in ShipType:
                             if (type.value == ship.getHullSize()):
-                                print(year,".",date,"-",scc.getName(),"produced a",type.name)
+                                #print(year,".",date,"-",scc.getName(),"produced a",type.name)
                                 ships.append(ship)
                                 shipCount[type] += 1
                 # next add in a new ship if there is room
@@ -131,6 +131,12 @@ if __name__ == '__main__':
                         ahs -= size
                     else:
                         break
+        if (day%40 == 0):
+            string = str(year)+"."+str(date)+":"
+            for type in ShipType:
+                string += "  "+type.name+": "+str(shipCount[type])
+            print (string)
+
         day += 1
 
 
