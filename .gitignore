@@ -3,3 +3,6 @@
 ################################################################################
 
 /.vs/StarshipConstruction/v15
+/src/__pycache__
+/StarshipConstruction.pyproj
+/StarshipConstruction.sln
