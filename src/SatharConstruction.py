@@ -101,8 +101,8 @@ if __name__ == '__main__':
     day = 0
     daysToSimulate = 800
 
-    for scc in sccs:
-        print (scc.getName(), scc.getMaxTotalHullSizes())
+    #for scc in sccs:
+    #    print (scc.getName(), scc.getMaxTotalHullSizes())
 
     ships = []
     while (day < daysToSimulate):
@@ -131,10 +131,10 @@ if __name__ == '__main__':
                         ahs -= size
                     else:
                         break
-        if (day%40 == 0):
-            string = str(year)+"."+str(date)+":"
+        if ((day+1)%40 == 0):
+            string = "FY"+str(year)+"."+str(date).zfill(3)+":"
             for type in ShipType:
-                string += "  "+type.name+": "+str(shipCount[type])
+                string += "  "+type.name+": "+str(shipCount[type]).zfill(2)
             print (string)
 
         day += 1
