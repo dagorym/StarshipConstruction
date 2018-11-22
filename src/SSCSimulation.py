@@ -150,7 +150,7 @@ generateNewShipList.totalShipsGenerated = 0
 generateNewShipList.totalHullsGenerated = 0
 
 if __name__ == '__main__':
-    print "#Running Star Ship Construction Simulation."
+    print ("#Running Star Ship Construction Simulation.")
     sccs = createSSCList()
     ships = []
     newShips = []
@@ -226,7 +226,7 @@ if __name__ == '__main__':
         for scc in sccs:
             totalShips += scc.queueSize()
         if ( not day % 100 ):
-            print day, totalShips, len( ships ), len( repairShips )
+            print (day, totalShips, len( ships ), len( repairShips ))
         day += 1
     # generate final statistics
     totalHullSize = 0;
@@ -242,11 +242,11 @@ if __name__ == '__main__':
         for ship in scc.shipsInQueue():
             totalHullSize += ship.getHullSize()
             shipDist[ship.getHullSize()] += 1
-    print "#Total ships = %d" % totalShips
-    print "#Average Hull Size =", ( float( totalHullSize ) / totalShips )
-    print "Hull Size Distribution"
+    print ("#Total ships = %d" % totalShips)
+    print ("#Average Hull Size =", ( float( totalHullSize ) / totalShips ))
+    print ("Hull Size Distribution")
     for x in range(20):
-        print "  ", x+1, ":  ", shipDist[x+1]
+        print ("  ", x+1, ":  ", shipDist[x+1])
     totalNewHullSize = 0
     newShipCount = 0
     for ship in newShips:
@@ -254,8 +254,8 @@ if __name__ == '__main__':
 #            print ship.getHullSize(), ship.getPassedCount()
             totalNewHullSize += ship.getHullSize()
             newShipCount += 1
-    print "#Number of ships passed over = %d" % newShipCount
+    print ("#Number of ships passed over = %d" % newShipCount)
     if ( newShipCount ):
-        print "#Average new ship hull size =", ( float( totalNewHullSize ) / newShipCount )
-    print "#Total ships generated = %d" % generateNewShipList.totalShipsGenerated
-    print "#Average hull size generated =", ( float( generateNewShipList.totalHullsGenerated ) / generateNewShipList.totalShipsGenerated )
+        print ("#Average new ship hull size =", ( float( totalNewHullSize ) / newShipCount ))
+    print ("#Total ships generated = %d" % generateNewShipList.totalShipsGenerated)
+    print ("#Average hull size generated =", ( float( generateNewShipList.totalHullsGenerated ) / generateNewShipList.totalShipsGenerated ))
