@@ -47,6 +47,12 @@ class StarshipConstructionCenter():
             self.maxTotalHullSizes = 20
             self.hullProbabilty = 1.0
             self.onlySystemShips = True
+        elif ( 5 == sscClass ):  # this is a generic SCC you must set the max number of hull points
+            self.maxHullSize = 20
+            self.maxMilitaryHullSize = 20
+            self.maxTotalHullSizes = 0
+            self.hullProbabilty = 1.0
+            self.onlySystemShips = False
         else:
             raise Exception( "Only class 1-4 starship construction centers are defined." )
         self.nextShipSize = self.maxTotalHullSizes

@@ -43,15 +43,25 @@ class Test( unittest.TestCase ):
         ssc = StarshipConstructionCenter( 4 )
         self.assertEqual( ssc.getMaxHullSize(), 5 )
         self.assertEqual( ssc.getMaxMilitaryHullSize(), 3 )
-        self.assertEqual( ssc.getMaxTotalHullSizes(), 10 )
+        self.assertEqual( ssc.getMaxTotalHullSizes(), 20 )
         self.assertEqual( ssc.getHullProbability(), 1.0 )
         self.assertEqual( ssc.getOnlySystemShips(), True )
 
+    def test_CreateType5(self):
+        ssc = StarshipConstructionCenter( 5 )
+        self.assertEqual( ssc.getMaxHullSize(), 20 )
+        self.assertEqual( ssc.getMaxMilitaryHullSize(), 20 )
+        self.assertEqual( ssc.getMaxTotalHullSizes(), 0 )
+        self.assertEqual( ssc.getHullProbability(), 1.0 )
+        self.assertEqual( ssc.getOnlySystemShips(), False )
+        ssc.maxTotalHullSizes = 47
+        self.assertEqual( ssc.getMaxTotalHullSizes(), 47, "Did not properly set max hull sizes" )
+               
     def test_CreateBadTypeLow( self ):
         self.assertRaises( Exception, StarshipConstructionCenter, 0 )
 
     def test_CreateBadTypeHigh( self ):
-        self.assertRaises( Exception, StarshipConstructionCenter, 5 )
+        self.assertRaises( Exception, StarshipConstructionCenter, 6 )
 
     def test_GetName( self ):
         ssc = StarshipConstructionCenter( 1, "Triad SSC" )
