@@ -54,7 +54,7 @@ class StarshipConstructionCenter():
             self.hullProbabilty = 1.0
             self.onlySystemShips = False
         else:
-            raise Exception( "Only class 1-4 starship construction centers are defined." )
+            raise Exception( "Only class 1-5 starship construction centers are defined." )
         self.nextShipSize = self.maxTotalHullSizes
         self.timeToHullSize = {}
 
