@@ -30,7 +30,7 @@ class ShipType(Enum):
     HC = 18
 
 SCCData = {
-          "SCC01" : { "HP":48, "start":868, "types":[ShipType.LC,ShipType.DD], "nextFighters":-1, "FighterAlternate":None },
+          "SCC01" : { "HP":47, "start":868, "types":[ShipType.LC,ShipType.DD], "nextFighters":-1, "FighterAlternate":None },
           "SCC02" : { "HP":46, "start":221, "types":[ShipType.AC,ShipType.DD,ShipType.F], "nextFighters":430, "FighterAlternate":ShipType.DD },
           "SCC03" : { "HP":59, "start":155, "types":[ShipType.HC,ShipType.DD,ShipType.FF], "nextFighters":-1, "FighterAlternate":None },
           "SCC04" : { "HP":49, "start":196, "types":[ShipType.AC,ShipType.LC,ShipType.FF,ShipType.F], "nextFighters":375, "FighterAlternate":ShipType.FF  },
@@ -43,15 +43,28 @@ SCCData = {
           }
 
 shipCount = {
-    ShipType.F: 0,
+    ShipType.F: 16,
     ShipType.C: 0,
-    ShipType.FF: 0,
-    ShipType.DD: 0,
-    ShipType.LC: 0,
-    ShipType.AC: 0,
-    ShipType.HC: 0,
+    ShipType.FF: 2,
+    ShipType.DD: 8,
+    ShipType.LC: 3,
+    ShipType.AC: 3,
+    ShipType.HC: 4,
     }
 
+def applyLosses(day):
+    if (411 == day):
+        shipCount[ShipType.F] -= 8
+        shipCount[ShipType.FF] -= 1
+        shipCount[ShipType.DD] -= 4
+        shipCount[ShipType.LC] -= 2
+        shipCount[ShipType.AC] -= 1
+        shipCount[ShipType.HC] -= 1
+    elif (455 == day):
+        shipCount[ShipType.DD] -= 2
+        shipCount[ShipType.LC] -= 1
+    else:
+        pass
 def initializeSCCs(centers):
     '''Set up the initial state of the various SCCs based on their
     production schedule'''
@@ -160,6 +173,7 @@ if __name__ == '__main__':
     while (day < daysToSimulate):
         year = 59 + day//400
         date = 1 + day%400
+        applyLosses(day)
 #        print(year,".",date)
         for scc in sccs:
             if (day >= SCCData[scc.getName()]["start"]): #only update the SCC if past its "start date"
