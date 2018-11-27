@@ -18,6 +18,8 @@ from StarshipConstructionCenter import StarshipConstructionCenter
 from Starship import Starship
 from enum import Enum
 
+doPrint = False
+
 class ShipType(Enum):
     F = 1
     C = 4
@@ -28,16 +30,16 @@ class ShipType(Enum):
     HC = 18
 
 SCCData = {
-          "SCC01" : { "HP":48, "start":868, "types":[ShipType.LC,ShipType.DD] },
-          "SCC02" : { "HP":46, "start":221, "types":[ShipType.AC,ShipType.DD,ShipType.F], "buildFighters": False },
-          "SCC03" : { "HP":59, "start":155, "types":[ShipType.HC,ShipType.DD,ShipType.FF] },
-          "SCC04" : { "HP":49, "start":196, "types":[ShipType.AC,ShipType.LC,ShipType.FF,ShipType.F], "buildFighters": False  },
-          "SCC05" : { "HP":50, "start":142, "types":[ShipType.LC,ShipType.DD,ShipType.C] },
-          "SCC06" : { "HP":200, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F] },
-          "SCC07" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F] },
-          "SCC08" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F] },
-          "SCC09" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F] },
-          "SCC10" : { "HP":60, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.F] }
+          "SCC01" : { "HP":48, "start":868, "types":[ShipType.LC,ShipType.DD], "nextFighters":-1, "FighterAlternate":None },
+          "SCC02" : { "HP":46, "start":221, "types":[ShipType.AC,ShipType.DD,ShipType.F], "nextFighters":430, "FighterAlternate":ShipType.DD },
+          "SCC03" : { "HP":59, "start":155, "types":[ShipType.HC,ShipType.DD,ShipType.FF], "nextFighters":-1, "FighterAlternate":None },
+          "SCC04" : { "HP":49, "start":196, "types":[ShipType.AC,ShipType.LC,ShipType.FF,ShipType.F], "nextFighters":375, "FighterAlternate":ShipType.FF  },
+          "SCC05" : { "HP":50, "start":142, "types":[ShipType.LC,ShipType.DD,ShipType.C], "nextFighters":-1, "FighterAlternate":None },
+          "SCC06" : { "HP":200, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F], "nextFighters":-1, "FighterAlternate":None },
+          "SCC07" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F], "nextFighters":-1, "FighterAlternate":None },
+          "SCC08" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F], "nextFighters":-1, "FighterAlternate":None },
+          "SCC09" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F], "nextFighters":-1, "FighterAlternate":None },
+          "SCC10" : { "HP":60, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.F], "nextFighters":-1, "FighterAlternate":None }
           }
 
 shipCount = {
@@ -143,37 +145,13 @@ def createSSCList():
     initializeSCCs(centers)
     return centers
 
-def checkBuildFighters(scc,type):
-    if (SCCData[scc]["buildFighters"] == True):
-        SCCData[scc]["buildFighters"] = False
-        return ShipType.F.value
+
+def buildFighters(scc,day):
+    if (SCCData[scc]["nextFighters"] == day):
+        SCCData[scc]["nextFighters"] += 30 + SCCData[scc]["FighterAlternate"].value*30
+        return True
     else:
-        SCCData[scc]["buildFighters"] = True
-        return type.value
-
-
-def nextShip(scc,space):
-    '''Returns the hull size of the next ship to start based on the SSC's
-    production schedule '''
-    size = 0
-    if ("SCC02" == scc):
-        for ship in SCCData[scc]["types"]:
-            if (space >= ship.value):
-                if (ShipType.DD == ship):
-                    return checkBuildFighters(scc,ShipType.DD)
-                return ship.value
-    elif ("SCC04" == scc):
-        for ship in SCCData[scc]["types"]:
-            if (space >= ship.value):
-                if (ShipType.FF == ship):
-                    return checkBuildFighters(scc,ShipType.FF)
-                return ship.value
-    else:
-        for ship in SCCData[scc]["types"]:
-            if (space >= ship.value):
-                return ship.value
-    return size
-
+        return False
 
 if __name__ == '__main__':
     print ("#Running Sathar Starship Construction Simulation.")
@@ -198,21 +176,36 @@ if __name__ == '__main__':
                 if (len(finishedShips) > 0):
                     for ship in finishedShips:
                         for type in ShipType:
-                            if (day>=400 and type.value == ship.getHullSize()):
-                                print(str(year)+"."+str(date),"-",scc.getName(),"produced a",type.name)
-                                ships.append(ship)
-                                shipCount[type] += 1
-                # next add in a new ship if there is room
-                ahs = scc.getAvailableSpace()
-                while (ahs > 0):
-                    size = nextShip(scc.getName(),ahs)
-                    if (size > 0):
-                        #create new ship of the returned size and add it the scc's queue
-                        newShip = Starship( size, 'military', 100 )
-                        scc.addToQueue(newShip)
-                        ahs -= size
-                    else:
-                        break
+                            if (type.value == ship.getHullSize()):
+                                # record the ship
+                                if (day >= 400):
+                                    if (doPrint): print(str(year)+"."+str(date),"-",scc.getName(),"produced a",type.name)
+                                    ships.append(ship)
+                                    shipCount[type] += 1
+                                # start a new ship of the same type
+                                # unless its a SCC that flips types
+                                if (scc.getAvailableSpace()>0):
+                                    if (type == SCCData[scc.getName()]["FighterAlternate"]): # we might have to build fighters
+                                        if (buildFighters(scc.getName(),day)): # yep, build fighters
+                                            for x in range(0,type.value):
+                                                if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size 1")
+                                                scc.addToQueue(Starship(1,'military',100))
+                                        else:  #otherwise build another of the same type
+                                            if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",type.value)
+                                            scc.addToQueue(Starship(type.value,'military',100))
+                                    elif (type == ShipType.F):  # we just finished fighters and might need to build the alternate
+                                        if (buildFighters(scc.getName(),day)): # no, still build fighters
+                                            for x in range(0,type.value):
+                                                if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size 1")
+                                                scc.addToQueue(Starship(1,'military',100))
+                                        else:  # otherwise build one of the alternates
+                                            size = SCCData[scc.getName()]["FighterAlternate"].value
+                                            if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",size)
+                                            scc.addToQueue(Starship(size,'military',100))
+                                    else:  # otherwise, just build another of the same type
+                                        if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",type.value)
+                                        scc.addToQueue(Starship(type.value,'military',100))
+
         if ((day+1)%40 == 0):
             string = "FY"+str(year)+"."+str(date).zfill(3)+":"
             for type in ShipType:
