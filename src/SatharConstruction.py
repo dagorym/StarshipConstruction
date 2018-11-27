@@ -65,12 +65,6 @@ def initializeSCCs(centers):
     lc.daysLeft = 280
     centers[0].addToQueue(lc)
     centers[0].addToQueue(Starship(14,'military',y))
-    #dd = Starship(6,'military',y)
-    #dd.daysLeft = 60
-    #centers[0].addToQueue(dd)
-    #dd = Starship(6,'military',y)
-    #dd.daysLeft = 120
-    #centers[0].addToQueue(dd)
     centers[0].addToQueue(Starship(5,'military',y))
 
     #SCC 2
@@ -102,7 +96,6 @@ def initializeSCCs(centers):
     hc.daysLeft = 360
     centers[2].addToQueue(hc)
     centers[2].addToQueue(Starship(18,'military',y))
-#    centers[2].addToQueue(Starship(6,'military',y))
     centers[2].addToQueue(Starship(5,'military',y))
 
     #SCC 4
@@ -116,7 +109,6 @@ def initializeSCCs(centers):
     centers[3].addToQueue(Starship(1,'military',y))
     centers[3].addToQueue(Starship(1,'military',y))
     centers[3].addToQueue(Starship(1,'military',y))
-#    centers[3].addToQueue(Starship(1,'military',y))
 
     #SCC 5
     lc = Starship(14,'military',y)
