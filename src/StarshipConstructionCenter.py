@@ -18,7 +18,8 @@ class StarshipConstructionCenter():
         self.shipQueue = []
         self.totalHullSizes = 0
         self.isLoaded = False
-        self.workload = [];
+        self.workload = []
+        self.destroyed = False
         if ( '' == name ):
             name = "Type %s Construction Center" % sscClass
         self.name = name
@@ -127,4 +128,14 @@ class StarshipConstructionCenter():
     def clearLoaded( self ): self.isLoaded = False
     def queueSize( self ): return len( self.shipQueue )
     def shipsInQueue( self ): return self.shipQueue
+
+    def clearQueue( self ):
+        self.shipQueue = []
+        self.totalHullSizes = 0
+        self.shipsInQueue = 0
+
+    def markDestroyed( self ):
+        self.destroyed = True
+
+    def isDestroyed( self ): return self.destroyed
 

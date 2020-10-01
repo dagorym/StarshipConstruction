@@ -18,7 +18,7 @@ from StarshipConstructionCenter import StarshipConstructionCenter
 from Starship import Starship
 from enum import Enum
 
-doPrint = False
+doPrint = True
 
 class ShipType(Enum):
     F = 1
@@ -52,7 +52,7 @@ shipCount = {
     ShipType.HC: 4,
     }
 
-def applyLosses(day):
+def applyLosses(day,sccs):
     if (411 == day):
         shipCount[ShipType.F] -= 8
         shipCount[ShipType.FF] -= 1
@@ -63,6 +63,21 @@ def applyLosses(day):
     elif (455 == day):
         shipCount[ShipType.DD] -= 2
         shipCount[ShipType.LC] -= 1
+    elif (610 == day):
+        shipCount[ShipType.DD] -= 1
+        shipCount[ShipType.FF] -= 1
+    elif (838 == day):
+        shipCount[ShipType.FF] -= 1
+        shipCount[ShipType.DD] -= 2
+        shipCount[ShipType.LC] -= 1
+    elif (892 == day):
+        shipCount[ShipType.C] -= 1
+    elif (1013 == day):
+        shipCount[ShipType.F] -= 4
+    elif (1035 == day):
+        sccs[1].markDestroyed()
+        shipCount[ShipType.DD] -= 1
+        shipCount[ShipType.F] -= 13
     else:
         pass
 def initializeSCCs(centers):
@@ -164,7 +179,7 @@ if __name__ == '__main__':
 
 
     day = 0
-    daysToSimulate = 3*400
+    daysToSimulate = 4*400
 
     #for scc in sccs:
     #    print (scc.getName(), scc.getMaxTotalHullSizes())
@@ -173,10 +188,13 @@ if __name__ == '__main__':
     while (day < daysToSimulate):
         year = 59 + day//400
         date = 1 + day%400
-        applyLosses(day)
+        applyLosses(day,sccs)
 #        print(year,".",date)
         for scc in sccs:
-            if (day >= SCCData[scc.getName()]["start"]): #only update the SCC if past its "start date"
+            if (scc.isDestroyed()): 
+#                print ("Skipping SCC", scc.getName())
+                pass
+            elif (day >= SCCData[scc.getName()]["start"]): #only update the SCC if past its "start date"
                 # first get all the ships that were completed (if any)
                 finishedShips = scc.update(day)
                 if (len(finishedShips) > 0):
@@ -194,22 +212,22 @@ if __name__ == '__main__':
                                     if (type == SCCData[scc.getName()]["FighterAlternate"]): # we might have to build fighters
                                         if (buildFighters(scc.getName(),day)): # yep, build fighters
                                             for x in range(0,type.value):
-                                                if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size 1")
+#                                                if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size 1")
                                                 scc.addToQueue(Starship(1,'military',100))
                                         else:  #otherwise build another of the same type
-                                            if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",type.value)
+#                                            if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",type.value)
                                             scc.addToQueue(Starship(type.value,'military',100))
                                     elif (type == ShipType.F):  # we just finished fighters and might need to build the alternate
                                         if (buildFighters(scc.getName(),day)): # no, still build fighters
                                             for x in range(0,type.value):
-                                                if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size 1")
+#                                                if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size 1")
                                                 scc.addToQueue(Starship(1,'military',100))
                                         else:  # otherwise build one of the alternates
                                             size = SCCData[scc.getName()]["FighterAlternate"].value
-                                            if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",size)
+#                                            if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",size)
                                             scc.addToQueue(Starship(size,'military',100))
                                     else:  # otherwise, just build another of the same type
-                                        if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",type.value)
+#                                        if (doPrint): print (str(year)+"."+str(date),"-",scc.getName(),"added a ship of size",type.value)
                                         scc.addToQueue(Starship(type.value,'military',100))
 
         if ((day+1)%40 == 0):
