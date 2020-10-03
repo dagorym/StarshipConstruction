@@ -39,7 +39,7 @@ SCCData = {
           "SCC07" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F], "nextFighters":-1, "FighterAlternate":None },
           "SCC08" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F], "nextFighters":-1, "FighterAlternate":None },
           "SCC09" : { "HP":75, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.C,ShipType.F], "nextFighters":-1, "FighterAlternate":None },
-          "SCC10" : { "HP":60, "start":50000, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.F], "nextFighters":-1, "FighterAlternate":None }
+          "SCC10" : { "HP":60, "start":1096, "types":[ShipType.HC,ShipType.LC,ShipType.AC,ShipType.DD,ShipType.FF,ShipType.F], "nextFighters":1104, "FighterAlternate":ShipType.F }
           }
 
 shipCount = {
@@ -78,6 +78,13 @@ def applyLosses(day,sccs):
         sccs[1].markDestroyed()
         shipCount[ShipType.DD] -= 1
         shipCount[ShipType.F] -= 13
+    elif (1096 == day):  # SCC#10 activates and ships from Saurian campaign added to inventory
+        shipCount[ShipType.F] += 9
+        shipCount[ShipType.FF] += 3
+        shipCount[ShipType.DD] += 5
+        shipCount[ShipType.LC] += 3
+        shipCount[ShipType.AC] += 2
+        shipCount[ShipType.HC] += 2
     else:
         pass
 def initializeSCCs(centers):
@@ -145,6 +152,27 @@ def initializeSCCs(centers):
     centers[4].addToQueue(Starship(14,'military',y))
     centers[4].addToQueue(Starship(18,'military',y))
     centers[4].addToQueue(Starship(4,'military',y))
+
+    #SCC 10
+    f = Starship(1,'military',y)
+    f.daysLeft = 8
+    centers[9].addToQueue(f)
+    ff = Starship(5,'military',y)
+    ff.daysLeft = 128
+    centers[9].addToQueue(ff)
+    dd = Starship(6,'military',y)
+    dd.daysLeft = 158
+    centers[9].addToQueue(dd)
+    lc = Starship(14,'military',y)
+    lc.daysLeft = 338
+    centers[9].addToQueue(lc)
+    ac = Starship(16,'military',y)
+    ac.daysLeft = 38
+    centers[9].addToQueue(ac)
+    hc = Starship(18,'military',y)
+    hc.daysLeft = 158
+    centers[9].addToQueue(hc)
+
 
 
 def createSSCList():
